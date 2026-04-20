@@ -42,7 +42,6 @@ MDScreen:
             font_name: "Cairo"
             font_size: "14sp"
             theme_text_color: "Hint"
-'''
 
 class WorkshopApp(MDApp):
     def build(self):
@@ -61,4 +60,3 @@ class WorkshopApp(MDApp):
 
 if __name__ == "__main__":
     WorkshopApp().run()
-'''
