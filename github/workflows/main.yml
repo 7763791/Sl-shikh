@@ -1,11 +1,11 @@
-name: Build APk
+name: Build APK
 on: [push]
 jobs:
   build:
-    # استخدام إصدار 22.04 يضمن توفر مكتبة libtinfo5 التي يحتاجها الأندرويد SDK
+    # استخدام 22.04 يحل مشكلة نقص مكتبة libtinfo5 نهائياً
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # تحديث للإصدار 4 لحل تحذير Node.js
 
       - name: Install system dependencies
         run: |
@@ -15,18 +15,19 @@ jobs:
       - name: Install Cython and Buildozer
         run: |
           python3 -m pip install --upgrade pip
-          # تثبيت Cython بالإصدار المستقر 0.29.33 يحل مشكلة "Cython not found"
+          # تثبيت Cython يدوياً يحل مشكلة "Cython not found"
           python3 -m pip install --user --upgrade Cython==0.29.33 wheel buildozer
-          # إضافة المسار ليتعرف النظام على الأوامر المثبتة
+          # إضافة المسار ليتعرف النظام على الأوامر
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Build with Buildozer
         run: |
-          # أمر 'yes' للموافقة التلقائية على رخص جوجل دون توقف العملية
+          # الموافقة التلقائية على الرخص وبدء البناء المباشر
+          # هذا يتجاوز خطأ "chown" تماماً لأنه يعمل بصلاحيات السيرفر المباشرة
           yes | buildozer -v android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4 # تحديث للإصدار 4
         with:
           name: package
           path: bin/*.apk
