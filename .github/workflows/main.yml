@@ -1,0 +1,34 @@
+name: Build Android APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          # تثبيت lld يمنع خطأ Broken pipe أثناء ربط مكتبات الأندرويد
+          sudo apt install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential lld libncurses5
+
+      - name: Install Cython and Buildozer
+        run: |
+          python3 -m pip install --upgrade pip
+          # استخدام هذا الإصدار يمنع تضارب المحرك مع مكتبات Kivy
+          python3 -m pip install --user --upgrade Cython==0.29.33 wheel buildozer
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build Android APK
+        run: |
+          # تجاوز تحذيرات الروت لضمان استمرار البناء في السيرفر
+          export BUILDOZER_WARN_ON_ROOT=0
+          yes | buildozer -v android debug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkshopApp-Package
+          path: bin/*.apk
+          
