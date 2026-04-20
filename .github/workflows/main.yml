@@ -1,0 +1,36 @@
+name: Build Android APK
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Full Dependencies List
+        run: |
+          sudo apt update
+          # هذه القائمة تجمع كل المكتبات الأساسية والطرفية التي يحتاجها Buildozer
+          sudo apt install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev build-essential lld libncurses5 libncursesw5 libsqlite3-dev libbz2-dev libreadline-dev tk-dev
+
+      - name: Install Python Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          # تثبيت المكتبات الأساسية للبناء والتحويل
+          python3 -m pip install --user --upgrade Cython==0.29.33 wheel buildozer
+
+      - name: Build APK (Full Build)
+        run: |
+          # التنظيف التلقائي قبل البناء لضمان عدم وجود ملفات تالفة
+          rm -rf bin/ .buildozer/
+          # تجاوز تحذيرات الـ Root لضمان سلاسة التنفيذ
+          export BUILDOZER_WARN_ON_ROOT=0
+          # البناء الكامل مع تفعيل سجلات مفصلة
+          yes | buildozer -v android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkshopApp-Complete-Build
+          path: bin/*.apk
