@@ -1,0 +1,30 @@
+name: Build Windows EXE
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
+        run: |
+          pip install pyinstaller kivy[base] kivymd pandas openpyxl pillow
+
+      - name: Build EXE
+        # نقوم هنا ببناء الملف فقط
+        run: |
+          pyinstaller --onefile --noconsole --name WorkshopApp main.py
+
+      - name: Upload EXE Artifact
+        # هذه أهم إضافة: تجعل الملف يُرفع دائماً حتى لو توقفت العملية بسبب خطأ التشغيل
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkshopApp-Final
+          path: dist/*.exe
+          
