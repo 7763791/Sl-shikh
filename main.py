@@ -1,4 +1,7 @@
 import os
+os.environ['KIVY_NO_ARGS'] = '1'
+
+import os
 import sqlite3
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
