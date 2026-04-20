@@ -1,0 +1,29 @@
+name: Build Windows EXE
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
+        run: |
+          pip install pyinstaller kivy[base] kivymd pandas openpyxl pillow
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --noconsole --name WorkshopApp main.py
+
+      - name: Upload EXE Artifact
+        # هذا التعديل يضمن رفع الملف حتى لو فشلت خطوات لاحقة
+        if: always() 
+        uses: actions/upload-artifact@v4
+        with:
+          name: WorkshopApp-Final
+          path: dist/*.exe
+          
