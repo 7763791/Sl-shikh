@@ -2,27 +2,27 @@ name: Build APK
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-22.04 # نستخدم إصداراً ثابتاً ومستقراً جداً للبناء
+    # استخدام إصدار 22.04 يضمن توفر مكتبة libtinfo5 التي يحتاجها الأندرويد SDK
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install system dependencies
         run: |
           sudo apt update
-          # تثبيت المكتبات الأساسية مع دعم الأنظمة القديمة والجديدة
-          sudo apt install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-          
+          sudo apt install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential
+
       - name: Install Cython and Buildozer
         run: |
           python3 -m pip install --upgrade pip
-          # تثبيت Cython يدوياً هو الحل للخطأ الأخير الذي ظهر لك
+          # تثبيت Cython بالإصدار المستقر 0.29.33 يحل مشكلة "Cython not found"
           python3 -m pip install --user --upgrade Cython==0.29.33 wheel buildozer
-          # إضافة مسار الأدوات إلى بيئة عمل GitHub لتتعرف عليها
+          # إضافة المسار ليتعرف النظام على الأوامر المثبتة
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Build with Buildozer
         run: |
-          # 'yes |' تجعل النظام يوافق تلقائياً على رخص الأندرويد SDK دون توقف
+          # أمر 'yes' للموافقة التلقائية على رخص جوجل دون توقف العملية
           yes | buildozer -v android debug
 
       - name: Upload APK
