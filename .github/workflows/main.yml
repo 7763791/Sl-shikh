@@ -1,35 +1,21 @@
-from kivymd.app import MDApp
-from kivymd.uix.label import MDLabel
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.button import MDRaisedButton
+name: Build APK
 
-class WorkshopMaster(MDApp):
-    def build(self):
-        # هذه هي شاشة التطبيق الرئيسية
-        screen = MDScreen()
-        
-        # إضافة نص ترحيبي
-        label = MDLabel(
-            text="نظام الورشة المتكامل",
-            halign="center",
-            theme_text_color="Primary",
-            font_style="H4"
-        )
-        
-        # إضافة زر تجريبي
-        btn = MDRaisedButton(
-            text="بدء العمل",
-            pos_hint={"center_x": 0.5, "center_y": 0.4},
-            on_release=self.on_button_press
-        )
-        
-        screen.add_widget(label)
-        screen.add_widget(btn)
-        return screen
+on: [push]
 
-    def on_button_press(self, instance):
-        print("تم الضغط على الزر!")
-
-if __name__ == "__main__":
-    WorkshopMaster().run()
-    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          buildozer_version: stable
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: bin/*.apk
+          
