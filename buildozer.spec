@@ -1,27 +1,15 @@
-name: Build APK
+[app]
+title = Workshop Master
+package.name = workshopmaster
+package.domain = org.test
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,db
+version = 1.0
+requirements = python3,kivy,kivymd,sqlite3
+orientation = portrait
+fullscreen = 0
+android.permissions = INTERNET
 
-on: [push]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
-          pip3 install --user --upgrade buildozer cython
-          
-      - name: Build with Buildozer
-        run: |
-          export PATH=$PATH:~/.local/bin/
-          buildozer android debug
-          
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: bin/*.apk
-          
+[buildozer]
+log_level = 2
+warn_on_root = 1
