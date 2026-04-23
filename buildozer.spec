@@ -1,27 +1,27 @@
-[app]
-# (str) Title of your application
-title = Workshop Master
-# (str) Package name
-package.name = workshopmaster
-# (str) Package domain (needed for android/ios packaging)
-package.domain = org.test
-# (str) Source code where the main.py live
-source.dir = .
-# (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,db
-# (str) Application versioning (method 1)
-version = 1.0
-# (list) Application requirements
-requirements = python3,kivy,kivymd,sqlite3
-# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-orientation = portrait
-# (bool) Indicate if the application should be fullscreen or not
-fullscreen = 0
-# (list) Permissions
-android.permissions = INTERNET
+name: Build APK
 
-[buildozer]
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
-log_level = 2
-# (int) Display build warnings
-warn_on_root = 1
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo-dev cmake libffi-dev libssl-dev
+          pip3 install --user --upgrade buildozer cython
+          
+      - name: Build with Buildozer
+        run: |
+          export PATH=$PATH:~/.local/bin/
+          buildozer android debug
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: bin/*.apk
+          
