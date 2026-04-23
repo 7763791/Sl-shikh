@@ -13,3 +13,9 @@ android.permissions = INTERNET
 [buildozer]
 log_level = 2
 warn_on_root = 1
+
+[app:android]
+# إجبار البناء على استخدام إصدار مستقر
+android.sdk = 33
+android.build_tools_version = 33.0.1
+android.accept_sdk_license = True
