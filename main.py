@@ -1,15 +1,13 @@
 import os
-import sys
 
-# هذا السطر يمنع Kivy من محاولة تشغيل الواجهة أثناء البناء
+# هذا الجزء يضمن نجاح البناء في GitHub Actions دون أخطاء الواجهة
 if os.environ.get('GITHUB_ACTIONS'):
-    print("GitHub Actions environment detected. Skipping UI initialization.")
+    print("GitHub Actions environment detected. Building APK only...")
 else:
-    # هذا الكود سيعمل فقط عندما تشغل البرنامج على جهازك في الورشة
+    # الكود الذي سيظهر لك عند فتح التطبيق في هاتفك
     from kivymd.app import MDApp
     from kivymd.uix.label import MDLabel
     from kivy.lang import Builder
-    import sqlite3
 
     KV = '''
 MDFloatLayout:
