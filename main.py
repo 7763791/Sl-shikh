@@ -25,7 +25,8 @@ def init_db():
     CREATE TABLE IF NOT EXISTS sales (
         item TEXT,
         qty INTEGER,
-        profit REAL
+        profit REAL,
+        total_sell REAL DEFAULT 0
     )
     """)
 
@@ -44,16 +45,17 @@ def init_db():
     conn.close()
 
 
-# ================= الشاشة الرئيسية =================
+# ================= شاشة رئيسية =================
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
+        # عنوان
         layout.add_widget(Label(
             text="نظام الورشة المتكامل",
-            font_size=22,
+            font_size=24,
             size_hint_y=None,
             height=60
         ))
@@ -63,9 +65,10 @@ class MainScreen(Screen):
             text="إعداد / طه غراب",
             font_size=10,
             size_hint_y=None,
-            height=20
+            height=25
         ))
 
+        # سعر المتر
         self.price = TextInput(
             hint_text="سعر متر الألمنيوم",
             multiline=False,
@@ -74,11 +77,12 @@ class MainScreen(Screen):
         )
         layout.add_widget(self.price)
 
+        # أزرار النظام (نفس فكرتك)
         layout.add_widget(Button(text="المخزون"))
         layout.add_widget(Button(text="المبيعات"))
-        layout.add_widget(Button(text="المقاسات"))
+        layout.add_widget(Button(text="جدول المقاسات"))
         layout.add_widget(Button(text="الأرباح"))
-        layout.add_widget(Button(text="الأرشيف"))
+        layout.add_widget(Button(text="أرشيف العملاء"))
 
         self.add_widget(layout)
 
