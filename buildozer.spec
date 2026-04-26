@@ -4,7 +4,7 @@ package.name = workshopmaster
 package.domain = org.workshop
 
 source.dir = .
-source.include_exts = py
+source.include_exts = py,png,jpg,kv,db
 
 version = 1.0
 
