@@ -23,12 +23,17 @@ jobs:
       - name: Install Python Tools
         run: |
           pip install --upgrade pip
-          pip install setuptools cython  # تم إضافة cython هنا لحل المشكلة الأخيرة
+          pip install setuptools cython
           pip install buildozer
 
-      - name: Build APK
+      - name: Build APK (Force Accept Licenses)
         run: |
-          buildozer android debug
+          # هذا هو السطر السحري: سيقوم بالرد بـ "y" تلقائياً على أي طلب ترخيص
+          yes | buildozer android debug
+        env:
+          # نضمن للنظام أننا وافقنا على التراخيص عبر متغيرات البيئة أيضاً
+          APP_ACCEPT_SDK_LICENSE: "1"
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
