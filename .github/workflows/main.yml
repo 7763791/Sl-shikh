@@ -13,12 +13,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12' # تم إصلاح الخطأ هنا من 3.1 إلى 3.12
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
 
       - name: Install Buildozer
         run: |
@@ -34,5 +34,4 @@ jobs:
         with:
           name: package
           path: bin/*.apk
-
           
