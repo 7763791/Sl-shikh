@@ -1,4 +1,4 @@
-name: Build APK Stable
+name: Build APK Final Stable
 
 on:
   push:
@@ -9,15 +9,14 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - name: Install system dependencies
+    - name: Install dependencies
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk \
@@ -29,9 +28,7 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython kivy
 
-    # ❌ لا SDK manager نهائيًا
-
-    - name: Clean Buildozer cache
+    - name: Clean cache
       run: |
         rm -rf .buildozer || true
 
@@ -42,5 +39,5 @@ jobs:
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: apk
+        name: workshop-apk
         path: bin/*.apk
