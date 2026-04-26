@@ -7,7 +7,7 @@ from kivy.uix.textinput import TextInput
 import sqlite3
 
 
-# ================= قاعدة البيانات =================
+# ================= DB =================
 def init_db():
     conn = sqlite3.connect("workshop.db")
     c = conn.cursor()
@@ -26,18 +26,7 @@ def init_db():
         item TEXT,
         qty INTEGER,
         profit REAL,
-        total_sell REAL DEFAULT 0
-    )
-    """)
-
-    c.execute("""
-    CREATE TABLE IF NOT EXISTS archive (
-        name TEXT,
-        details TEXT,
-        tw REAL,
-        th REAL,
-        tm2 REAL,
-        tcash REAL
+        total_sell REAL
     )
     """)
 
@@ -45,30 +34,27 @@ def init_db():
     conn.close()
 
 
-# ================= شاشة رئيسية =================
+# ================= Main Screen =================
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        # عنوان
         layout.add_widget(Label(
             text="نظام الورشة المتكامل",
-            font_size=24,
+            font_size=22,
             size_hint_y=None,
             height=60
         ))
 
-        # الحقوق
         layout.add_widget(Label(
             text="إعداد / طه غراب",
-            font_size=10,
+            font_size=12,
             size_hint_y=None,
             height=25
         ))
 
-        # سعر المتر
         self.price = TextInput(
             hint_text="سعر متر الألمنيوم",
             multiline=False,
@@ -77,24 +63,21 @@ class MainScreen(Screen):
         )
         layout.add_widget(self.price)
 
-        # أزرار النظام (نفس فكرتك)
         layout.add_widget(Button(text="المخزون"))
         layout.add_widget(Button(text="المبيعات"))
-        layout.add_widget(Button(text="جدول المقاسات"))
+        layout.add_widget(Button(text="المقاسات"))
         layout.add_widget(Button(text="الأرباح"))
-        layout.add_widget(Button(text="أرشيف العملاء"))
+        layout.add_widget(Button(text="الأرشيف"))
 
         self.add_widget(layout)
 
 
-# ================= التطبيق =================
+# ================= App =================
 class WorkshopApp(App):
     def build(self):
         init_db()
-
         sm = ScreenManager()
         sm.add_widget(MainScreen(name="main"))
-
         return sm
 
 
