@@ -1,4 +1,4 @@
-name: Build APK (Fixed SDK)
+name: Build APK (Stable Fix)
 
 on:
   push:
@@ -9,14 +9,15 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - name: Install system deps
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y git zip unzip openjdk-17-jdk \
@@ -28,16 +29,7 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython kivy
 
-    # 🔥 مهم جداً: قبول رخص Android تلقائياً
-    - name: Accept Android SDK licenses
-      run: |
-        mkdir -p ~/.android
-        touch ~/.android/repositories.cfg || true
-        yes | sdkmanager --licenses || true
-
-    - name: Install Android SDK components
-      run: |
-        yes | sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+    # ❌ لا sdkmanager هنا نهائيًا
 
     - name: Build APK
       run: |
